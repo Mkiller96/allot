@@ -23,6 +23,14 @@ def create_app(config_class=Config):
     app.register_blueprint(categories_bp, url_prefix='/api/categories')
     app.register_blueprint(metrics_bp,    url_prefix='/api/metrics')
 
+    @app.route('/')
+    def index():
+        return {'status': 'ok', 'message': 'Allot API running'}, 200
+
+    @app.route('/api/health')
+    def health():
+        return {'status': 'ok'}, 200
+
     with app.app_context():
         db.create_all()
         _seed_default_admin()
