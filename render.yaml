@@ -11,7 +11,14 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: DATABASE_URL
-        sync: false   # pega aqui tu URL: mysql+pymysql://user:pass@host/dbname
+        fromDatabase:
+          name: allot-db
+          property: connectionString
       - key: CORS_ORIGINS
         value: https://mkiller96.github.io
+    plan: free
+
+databases:
+  - name: allot-db
+    databaseName: allot
     plan: free
