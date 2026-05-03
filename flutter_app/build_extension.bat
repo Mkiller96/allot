@@ -6,8 +6,8 @@ echo ============================================
 cd /d "%~dp0"
 
 echo.
-echo [1/2] Compilando Flutter web (renderer html + CSP)...
-flutter build web --web-renderer html --csp --release
+echo [1/2] Compilando Flutter web (CSP)...
+flutter build web --csp --release
 
 if errorlevel 1 (
     echo ERROR: Flutter build fallo.
