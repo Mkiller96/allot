@@ -1,0 +1,308 @@
+﻿<!doctype html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Allot — Control de Gastos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+      <div class="login-card md-card">
+        <div class="login-brand">
+          <span class="brand-icon">◈</span>
+          <span class="brand-name">Allot</span>
+        </div>
+        <p class="login-sub">Control de Gastos Personales</p>
+        <div class="role-chips" id="roleChips">
+          <button class="role-chip active" data-role="admin">
+            <span class="role-chip-icon">🛡️</span><span>Administrador</span>
+          </button>
+          <button class="role-chip" data-role="user">
+            <span class="role-chip-icon">👤</span><span>Usuario</span>
+          </button>
+          <button class="role-chip" data-role="guest">
+            <span class="role-chip-icon">👁️</span><span>Invitado</span>
+          </button>
+        </div>
+        <form id="loginForm" novalidate>
+          <label class="form-label">Nombre de usuario
+            <input class="form-input" id="loginUser" type="text" placeholder="Tu nombre…" required autocomplete="username" />
+          </label>
+          <label class="form-label" id="passGroup">Contraseña
+            <input class="form-input" id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password" />
+          </label>
+          <button type="submit" class="btn-primary full">Entrar</button>
+          <p class="login-hint" id="loginHint"></p>
+        </form>
+        <div class="login-footer">
+          <button class="theme-toggle-login" id="themeToggleLogin" aria-label="Cambiar tema">
+            <svg id="themeIconLogin" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- APP SHELL -->
+    <div class="app-shell" id="appShell" hidden>
+
+      <!-- SIDEBAR -->
+      <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <span class="brand-icon">◈</span>
+          <span class="brand-name">Allot</span>
+        </div>
+        <div class="user-badge">
+          <span class="user-avatar" id="userAvatar">A</span>
+          <div class="user-info">
+            <p class="user-name" id="userName">Usuario</p>
+            <p class="user-role" id="userRoleLabel">Administrador</p>
+          </div>
+        </div>
+        <ul class="nav-list">
+          <li><button class="nav-btn active" data-view="home">
+            <svg viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>Inicio
+          </button></li>
+          <li><button class="nav-btn" data-view="dashboard">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Panel
+          </button></li>
+          <li><button class="nav-btn" data-view="history">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Historial
+          </button></li>
+          <li id="navSettings"><button class="nav-btn" data-view="settings">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>Ajustes
+          </button></li>
+        </ul>
+        <div class="sidebar-bottom">
+          <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+            <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+            <span id="themeLabel">Modo claro</span>
+          </button>
+          <button class="btn-logout" id="logoutBtn">
+            <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Salir
+          </button>
+        </div>
+      </nav>
+
+      <!-- MAIN LAYOUT -->
+      <div class="layout">
+
+        <!-- HOME VIEW -->
+        <main class="view active" id="view-home">
+          <header class="topbar">
+            <h1 class="page-title">Inicio</h1>
+            <button class="btn-add" id="openAddBtn" aria-label="Añadir gasto">
+              <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              Añadir gasto
+            </button>
+          </header>
+          <div class="cards-row">
+            <div class="stat-card accent md-card">
+              <p class="stat-label">Gasto del mes</p>
+              <p class="stat-value" id="monthTotal">€0,00</p>
+              <p class="stat-sub" id="monthCount">0 gastos</p>
+            </div>
+            <div class="stat-card md-card">
+              <p class="stat-label">Gasto hoy</p>
+              <p class="stat-value" id="todayTotal">€0,00</p>
+              <p class="stat-sub" id="todayCount">0 gastos</p>
+            </div>
+            <div class="stat-card md-card">
+              <p class="stat-label">Esta semana</p>
+              <p class="stat-value" id="weekTotal">€0,00</p>
+              <p class="stat-sub" id="weekCount">0 gastos</p>
+            </div>
+          </div>
+          <section class="section">
+            <h2 class="section-title">Top categorías este mes</h2>
+            <div class="top-cats" id="topCats"></div>
+          </section>
+          <section class="section">
+            <h2 class="section-title">Gastos de hoy</h2>
+            <div id="todayList" class="expense-list"></div>
+            <p class="empty-msg" id="todayEmpty" hidden>Sin gastos hoy.</p>
+          </section>
+        </main>
+
+        <!-- DASHBOARD VIEW -->
+        <main class="view" id="view-dashboard">
+          <header class="topbar">
+            <h1 class="page-title">Panel de Control</h1>
+          </header>
+          <div class="cards-row kpi-row">
+            <div class="stat-card accent md-card">
+              <p class="stat-label">Total este año</p>
+              <p class="stat-value" id="kpiYear">€0,00</p>
+              <p class="stat-sub" id="kpiYearCount">0 gastos</p>
+            </div>
+            <div class="stat-card md-card">
+              <p class="stat-label">Promedio mensual</p>
+              <p class="stat-value" id="kpiAvgMonth">€0,00</p>
+              <p class="stat-sub">últimos 12 meses</p>
+            </div>
+            <div class="stat-card md-card">
+              <p class="stat-label">Mes más caro</p>
+              <p class="stat-value" id="kpiTopMonth">—</p>
+              <p class="stat-sub" id="kpiTopMonthAmt">€0,00</p>
+            </div>
+            <div class="stat-card md-card">
+              <p class="stat-label">Categoría líder</p>
+              <p class="stat-value" id="kpiTopCat">—</p>
+              <p class="stat-sub" id="kpiTopCatAmt">€0,00</p>
+            </div>
+          </div>
+          <section class="section">
+            <div class="section-header">
+              <h2 class="section-title">Evolución mensual</h2>
+              <select class="filter-select sm" id="dashYear"></select>
+            </div>
+            <div class="bar-chart-wrap md-card">
+              <canvas id="monthBarChart" height="200"></canvas>
+            </div>
+          </section>
+          <div class="dash-cols">
+            <section class="section">
+              <h2 class="section-title">Por categoría (año)</h2>
+              <div class="chart-wrap md-card" style="padding:20px">
+                <canvas id="dashPieChart" width="200" height="200"></canvas>
+                <div class="chart-legend" id="dashChartLegend"></div>
+              </div>
+            </section>
+            <section class="section">
+              <h2 class="section-title">Top 5 gastos del año</h2>
+              <div id="top5List" class="expense-list"></div>
+              <p class="empty-msg" id="top5Empty" hidden>Sin gastos este año.</p>
+            </section>
+          </div>
+        </main>
+
+        <!-- HISTORY VIEW -->
+        <main class="view" id="view-history">
+          <header class="topbar">
+            <h1 class="page-title">Historial</h1>
+          </header>
+          <div class="filter-row">
+            <select class="filter-select" id="filterPeriod">
+              <option value="week">Esta semana</option>
+              <option value="month" selected>Este mes</option>
+              <option value="year">Este año</option>
+              <option value="all">Todo</option>
+            </select>
+            <select class="filter-select" id="filterCategory">
+              <option value="">Todas las categorías</option>
+            </select>
+            <select class="filter-select" id="filterSort">
+              <option value="newest">Más reciente</option>
+              <option value="oldest">Más antiguo</option>
+              <option value="highest">Mayor importe</option>
+              <option value="lowest">Menor importe</option>
+            </select>
+            <input class="filter-input" id="filterSearch" type="search" placeholder="Buscar…" />
+          </div>
+          <section class="section">
+            <h2 class="section-title">Por categoría</h2>
+            <div class="chart-wrap md-card" style="padding:20px">
+              <canvas id="pieChart" width="220" height="220"></canvas>
+              <div class="chart-legend" id="chartLegend"></div>
+            </div>
+          </section>
+          <div class="section">
+            <p class="history-total">Total: <strong id="historyTotal">€0,00</strong></p>
+            <div id="historyList" class="expense-list"></div>
+            <p class="empty-msg" id="historyEmpty" hidden>Sin gastos en este período.</p>
+          </div>
+        </main>
+
+        <!-- SETTINGS VIEW -->
+        <main class="view" id="view-settings">
+          <header class="topbar">
+            <h1 class="page-title">Ajustes</h1>
+          </header>
+          <section class="section settings-section md-card" style="padding:20px 24px;margin-bottom:24px">
+            <h2 class="section-title">Sesión actual</h2>
+            <div class="role-info-row">
+              <span class="user-avatar lg" id="settingsAvatar">A</span>
+              <div>
+                <p style="font-weight:700;font-size:1.05rem" id="settingsUserName">—</p>
+                <p class="stat-label" id="settingsRole">—</p>
+              </div>
+            </div>
+          </section>
+          <section class="section settings-section">
+            <h2 class="section-title">Categorías</h2>
+            <div id="catList" class="cat-list"></div>
+            <button class="btn-outline" id="addCatBtn">+ Nueva categoría</button>
+          </section>
+          <section class="section settings-section">
+            <h2 class="section-title">Datos</h2>
+            <button class="btn-outline danger" id="clearDataBtn">Borrar todos los gastos</button>
+          </section>
+        </main>
+
+      </div>
+    </div>
+
+    <!-- ADD / EDIT MODAL -->
+    <div class="modal-backdrop" id="modalBackdrop" hidden>
+      <div class="modal md-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modalTitle">Añadir gasto</h2>
+          <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
+        </div>
+        <form id="expenseForm" novalidate>
+          <input type="hidden" id="editId" />
+          <label class="form-label">Importe (€)
+            <input class="form-input" id="fAmount" type="number" step="0.01" min="0.01" placeholder="0,00" required />
+          </label>
+          <label class="form-label">Categoría
+            <select class="form-input" id="fCategory" required></select>
+          </label>
+          <label class="form-label">Fecha
+            <input class="form-input" id="fDate" type="date" required />
+          </label>
+          <label class="form-label">Nota (opcional)
+            <input class="form-input" id="fNote" type="text" placeholder="Describe el gasto…" />
+          </label>
+          <div class="form-actions">
+            <button type="button" class="btn-ghost" id="modalCancel">Cancelar</button>
+            <button type="submit" class="btn-primary" id="formSubmit">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ADD CATEGORY MODAL -->
+    <div class="modal-backdrop" id="catModalBackdrop" hidden>
+      <div class="modal md-card" role="dialog" aria-modal="true">
+        <div class="modal-header">
+          <h2 class="modal-title">Nueva categoría</h2>
+          <button class="modal-close" id="catModalClose" aria-label="Cerrar">✕</button>
+        </div>
+        <form id="catForm" novalidate>
+          <label class="form-label">Nombre
+            <input class="form-input" id="catName" type="text" required placeholder="Ej: Gimnasio" />
+          </label>
+          <label class="form-label">Color
+            <input class="form-input color-input" id="catColor" type="color" value="#4CAF50" />
+          </label>
+          <label class="form-label">Emoji / Icono
+            <input class="form-input" id="catIcon" type="text" maxlength="2" placeholder="🏋️" />
+          </label>
+          <div class="form-actions">
+            <button type="button" class="btn-ghost" id="catModalCancel">Cancelar</button>
+            <button type="submit" class="btn-primary">Crear</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

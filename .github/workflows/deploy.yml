@@ -1,0 +1,38 @@
+name: Deploy Allot
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # ── Flutter Web → GitHub Pages ─────────────────────────────────
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.x'
+          channel: stable
+
+      - name: Install dependencies
+        working-directory: flutter_app
+        run: flutter pub get
+
+      - name: Build web
+        working-directory: flutter_app
+        run: |
+          flutter build web \
+            --web-renderer html \
+            --csp \
+            --release \
+            --base-href "/allot/" \
+            --dart-define=API_URL=${{ secrets.API_URL }}
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: flutter_app/build/web
+          cname: mkiller96.github.io

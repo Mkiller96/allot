@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: allot-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn "app:create_app()"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false   # pega tu URL de FreeSQLDatabase.com o PlanetScale
+      - key: CORS_ORIGINS
+        value: https://mkiller96.github.io
+    plan: free
+
+databases:
+  - name: allot-db
+    plan: free
