@@ -11,11 +11,7 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: DATABASE_URL
-        sync: false   # pega tu URL de FreeSQLDatabase.com o PlanetScale
+        sync: false   # pega aqui tu URL: mysql+pymysql://user:pass@host/dbname
       - key: CORS_ORIGINS
         value: https://mkiller96.github.io
-    plan: free
-
-databases:
-  - name: allot-db
     plan: free
