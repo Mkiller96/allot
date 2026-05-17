@@ -4,7 +4,7 @@ services:
     runtime: python
     rootDir: backend
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn "app:create_app()"
+    startCommand: gunicorn app:create_app()
     envVars:
       - key: SECRET_KEY
         generateValue: true
@@ -16,6 +16,8 @@ services:
           property: connectionString
       - key: CORS_ORIGINS
         value: '*'
+      - key: PYTHON_VERSION
+        value: 3.11.0
     plan: free
 
 databases:
