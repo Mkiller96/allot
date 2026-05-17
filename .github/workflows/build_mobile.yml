@@ -1,0 +1,76 @@
+name: Build APK + IPA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  API_URL: https://allot-backend.onrender.com/api
+  FLUTTER_VERSION: "3.22.0"
+
+jobs:
+  # ─────────────────────────────────────────────────────────────
+  # Android — genera app-release.apk
+  # ─────────────────────────────────────────────────────────────
+  build-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Get dependencies
+        working-directory: flutter_app
+        run: flutter pub get
+
+      - name: Build APK
+        working-directory: flutter_app
+        run: flutter build apk --release --dart-define=API_URL=${{ env.API_URL }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: allot-release.apk
+          path: flutter_app/build/app/outputs/flutter-apk/app-release.apk
+
+  # ─────────────────────────────────────────────────────────────
+  # iOS — genera allot.ipa (requiere macOS runner)
+  # ─────────────────────────────────────────────────────────────
+  build-ipa:
+    name: Build iOS IPA
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Get dependencies
+        working-directory: flutter_app
+        run: flutter pub get
+
+      - name: Build IPA (no codesign — para distribucion ad-hoc)
+        working-directory: flutter_app
+        run: |
+          flutter build ipa --release \
+            --no-codesign \
+            --dart-define=API_URL=${{ env.API_URL }}
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: allot-release.ipa
+          path: flutter_app/build/ios/ipa/*.ipa
