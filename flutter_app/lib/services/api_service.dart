@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class ApiService {
   static String baseUrl = const String.fromEnvironment(
     'API_URL',
-    defaultValue: 'https://allot-5s95.onrender.com/api',
+    defaultValue: 'https://allot-backend.onrender.com/api',
   );
   static VoidCallback? onUnauthorized;
 
