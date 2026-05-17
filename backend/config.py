@@ -5,9 +5,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def _fix_db_url(url):
+    if not url:
+        return url
     # Render gives postgres:// but SQLAlchemy requires postgresql://
-    if url and url.startswith('postgres://'):
+    if url.startswith('postgres://'):
         return 'postgresql://' + url[len('postgres://'):]
+    # If someone accidentally set a mysql:// URL, force it to postgresql
+    if url.startswith('mysql://'):
+        return 'postgresql://' + url[len('mysql://'):]
     return url
 
 class Config:
