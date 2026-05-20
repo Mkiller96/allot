@@ -1,4 +1,0 @@
-# This file is intentionally empty.
-# The real Flutter project is in the flutter_app/ directory.
-# Codemagic needs this file at the root to detect the project,
-# then working_directory: flutter_app in codemagic.yaml redirects to the actual project.
