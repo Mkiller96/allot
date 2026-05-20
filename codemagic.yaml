@@ -17,6 +17,7 @@ workflows:
       vars:
         APP_ID: "com.allot.app"
         APP_NAME: "Allot"
+      flutter_pubspec_path: flutter_app/pubspec.yaml
     triggering:
       events:
         - push
@@ -67,6 +68,7 @@ workflows:
       vars:
         APP_ID: "com.allot.app"
         APP_NAME: "Allot"
+      flutter_pubspec_path: flutter_app/pubspec.yaml
     triggering:
       events:
         - push
@@ -113,6 +115,7 @@ workflows:
       vars:
         APP_ID: "com.allot.app"
         APP_NAME: "Allot"
+      flutter_pubspec_path: flutter_app/pubspec.yaml
     triggering:
       events:
         - push
@@ -143,6 +146,7 @@ workflows:
       vars:
         APP_ID: "com.allot.app"
         APP_NAME: "Allot"
+      flutter_pubspec_path: flutter_app/pubspec.yaml
     triggering:
       events:
         - push
@@ -171,6 +175,8 @@ workflows:
     working_directory: flutter_app
     environment:
       flutter: stable
+      vars:
+        flutter_pubspec_path: flutter_app/pubspec.yaml
     triggering:
       events:
         - push
